@@ -294,6 +294,15 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "core.Contact": "fas fa-address-book",
+        "core.File": "fas fa-file",
+        "core.Home": "fas fa-home",
+        "core.Lesson": "fas fa-school",
+        "core.Post": "fas fa-newspaper",
+        "core.Review": "fas fa-users",
+        "core.SocialAccount": "fas fa-hashtag",
+        "core.Subscription": "fas fa-calendar",
+
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
