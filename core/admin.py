@@ -49,6 +49,12 @@ class ContactAdmin(admin.ModelAdmin):
 class HomeAdmin(admin.ModelAdmin):
     list_display = ('id', 'full_name', 'bio')
 
+    def has_add_permission(self, request, obj=None):
+        from .models import Home
+        if Home.objects.all():
+            return False
+        return True
+
 
 @admin.register(models.Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):

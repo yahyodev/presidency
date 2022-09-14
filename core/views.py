@@ -27,8 +27,6 @@ class ContactView(ListAPIView):
     queryset = models.Contact.objects.all()
     serializer_class = serializers.ContactSerializer
 
-    def get_queryset(self):
-        return models.Contact.objects.first() or models.Contact.objects.none()
 
 
 class HomeView(ListAPIView):
@@ -36,7 +34,7 @@ class HomeView(ListAPIView):
     serializer_class = serializers.HomeSerializer
 
     def get_queryset(self):
-        return models.Home.objects.first() or models.Contact.objects.none()
+        return models.Home.objects.first() or models.Home.objects.none()
 
 
 class SubscriptionView(CreateAPIView):

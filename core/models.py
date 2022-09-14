@@ -124,6 +124,7 @@ class Contact(BaseModel):
         verbose_name_plural = 'Contacts'
 
 
+
 class Home(BaseModel):
     full_name = models.CharField('full_name', max_length=256)
     bio = RichTextField('bio')
@@ -135,6 +136,10 @@ class Home(BaseModel):
         db_table = 'home'
         verbose_name = 'Home'
         verbose_name_plural = 'Home'
+
+    @staticmethod
+    def get_solo():
+        return Home.objects.get_or_create()[0]
 
 
 class Subscription(BaseModel):
