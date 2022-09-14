@@ -138,7 +138,7 @@ class Home(BaseModel):
 
 
 class Subscription(BaseModel):
-    email = models.EmailField('email')
+    email = models.EmailField('email', unique=True)
 
     def __str__(self):
         return self.email
