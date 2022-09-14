@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import environ
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 import os
@@ -34,25 +33,24 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    #third party apps
+    # third party apps
     'jazzmin',
     'ckeditor',
     "debug_toolbar",
     "rest_framework",
     "drf_yasg",
     "django_filters",
-    #django apps
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #custom apps
+    # custom apps
     'core',
 ]
 
@@ -64,8 +62,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #third party
+    # third party
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -87,7 +86,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -114,8 +112,8 @@ DATABASES = {
 
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
-    DATABASES = {'default': dj_database_url.config()}
 
+    DATABASES = {'default': dj_database_url.config()}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -135,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -147,7 +144,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -156,7 +152,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = (
     BASE_DIR / 'staticfiles',
 )
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -179,7 +175,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # END CORS
 
 
-
 # REST_FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
@@ -195,7 +190,7 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
-#TODO: add ckeditor and jazzmin
+# TODO: add ckeditor and jazzmin
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
@@ -242,7 +237,7 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
 
         # external url that opens in a new window (Permissions can be added)
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
@@ -335,7 +330,7 @@ JAZZMIN_SETTINGS = {
     "language_chooser": False,
 }
 
-#===============CKEDITOR CONFIGURATION=======================#
+# ===============CKEDITOR CONFIGURATION=======================#
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_FILENAME_GENERATOR = 'config.utils.get_filename'
 CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
@@ -345,8 +340,6 @@ CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_ALLOW_NONIMAGE_FILES = True
 CKEDITOR_RESTRICT_BY_USER = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -371,7 +364,7 @@ CKEDITOR_CONFIGS = {
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Update', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],},
+             'items': ['Image', 'Update', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'], },
             '/',
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
@@ -395,7 +388,7 @@ CKEDITOR_CONFIGS = {
         # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
         'tabSpaces': 4,
         'extraPlugins': ','.join([
-            'uploadimage', # the upload image feature
+            'uploadimage',  # the upload image feature
             # your extra plugins here
             'div',
             'autolink',
@@ -412,4 +405,5 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
-#===============END CKEDITOR CONFIGURATION=======================#
+# ===============END CKEDITOR CONFIGURATION=======================#
+
