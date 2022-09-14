@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from . import models, serializers
 
 
@@ -8,9 +8,21 @@ class LessonListView(ListAPIView):
     serializer_class = serializers.LessonSerializer
 
 
+class LessonDetailView(RetrieveAPIView):
+    queryset = models.Lesson.objects.all()
+    serializer_class = serializers.LessonSerializer
+    lookup_field = 'slug'
+
+
 class PostListView(ListAPIView):
     queryset = models.Post.objects.all()
     serializer_class = serializers.PostSerializer
+
+
+class PostDetailView(RetrieveAPIView):
+    queryset = models.Post.objects.all()
+    serializer_class = serializers.PostSerializer
+    lookup_field = 'slug'
 
 
 class ReviewListView(ListAPIView):
@@ -23,10 +35,9 @@ class SocialAccountListView(ListAPIView):
     serializer_class = serializers.SocialAccountSerializer
 
 
-class ContactView(ListAPIView):
+class ContactView(CreateAPIView):
     queryset = models.Contact.objects.all()
     serializer_class = serializers.ContactSerializer
-
 
 
 class HomeView(ListAPIView):

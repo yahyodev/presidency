@@ -407,3 +407,4 @@ CKEDITOR_CONFIGS = {
 }
 # ===============END CKEDITOR CONFIGURATION=======================#
 
+APPEND_SLASH=True
