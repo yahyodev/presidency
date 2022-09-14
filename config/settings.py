@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'jazzmin',
     'ckeditor',
     "debug_toolbar",
+    "rest_framework",
+    "drf_yasg",
+    "django_filters",
     #django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -165,7 +168,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    "DEFAULT_PAGINATION_CLASS": "src.base.paginators.CustomLimitOffsetPaginator",
+    "DEFAULT_PAGINATION_CLASS": "core.paginators.CustomLimitOffsetPaginator",
     "PAGE_SIZE": 10,
 }
 # END REST_FRAMEWORK
@@ -317,7 +320,16 @@ JAZZMIN_SETTINGS = {
 
 #===============CKEDITOR CONFIGURATION=======================#
 CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
+CKEDITOR_FILENAME_GENERATOR = 'config.utils.get_filename'
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
+CKEDITOR_THUMBNAIL_SIZE = (300, 300)
+CKEDITOR_IMAGE_QUALITY = 100
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = True
+CKEDITOR_RESTRICT_BY_USER = False
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -342,7 +354,7 @@ CKEDITOR_CONFIGS = {
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+             'items': ['Image', 'Update', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],},
             '/',
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
