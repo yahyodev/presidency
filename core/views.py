@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from . import models, serializers
 
 
@@ -40,12 +43,10 @@ class ContactView(CreateAPIView):
     serializer_class = serializers.ContactSerializer
 
 
-class HomeView(ListAPIView):
-    queryset = models.Home.objects.all()
-    serializer_class = serializers.HomeSerializer
+class HomeView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response(serializers.HomeSerializer(models.Home.get_solo()).data)
 
-    def get_queryset(self):
-        return models.Home.objects.first() or models.Home.objects.none()
 
 
 class SubscriptionView(CreateAPIView):
