@@ -424,15 +424,20 @@ CKEDITOR_CONFIGS = {
 APPEND_SLASH = True
 
 CACHES = {
+
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/django_cache',
+
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+
+        'LOCATION': 'unique-snowflake',
+
     }
 
 }
-
+CACHE_MIDDLEWARE_ALIAS = 'default'  # The cache alias to use for storage and 'default' is **local-memory cache**.
+CACHE_MIDDLEWARE_SECONDS = 20  # number of seconds before each page is cached
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 import django_heroku
 
 django_heroku.settings(locals())
-

@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
@@ -124,7 +125,6 @@ class Contact(BaseModel):
         verbose_name_plural = 'Contacts'
 
 
-
 class Home(BaseModel):
     full_name = models.CharField('full_name', max_length=256)
     bio = RichTextField('bio')
@@ -152,3 +152,25 @@ class Subscription(BaseModel):
         db_table = 'subscription'
         verbose_name = 'Subscription'
         verbose_name_plural = 'Subscriptions'
+
+
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
+
+
+@receiver(post_save, sender=Home)
+@receiver(post_delete, sender=Home)
+def cache_home(sender, instance, **kwargs):
+    cache.delete('Home')
+    cache.set('Home', Home.get_solo())
+
+
+@receiver(post_save, sender=SocialAccount)
+@receiver(post_delete, sender=SocialAccount)
+@receiver(post_save, sender=Review)
+@receiver(post_delete, sender=Review)
+def cache_everything(sender, instance, **kwargs):
+    name = sender._meta.object_name
+    cache.delete(name)
+    exec(f"cache.set('{name}', {name}.objects.all())")
+    print(cache.get(name), '**')

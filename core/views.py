@@ -1,19 +1,11 @@
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 from . import models, serializers
+from django.core.cache import cache
 
 
-class CacheMixin:
-    @method_decorator(cache_page(60 * 60))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-
-class LessonListView(ListAPIView, CacheMixin):
+class LessonListView(ListAPIView):
     queryset = models.Lesson.objects.all()
     serializer_class = serializers.LessonSerializer
 
@@ -24,7 +16,7 @@ class LessonDetailView(RetrieveAPIView):
     lookup_field = 'slug'
 
 
-class PostListView(ListAPIView, CacheMixin):
+class PostListView(ListAPIView):
     queryset = models.Post.objects.all()
     serializer_class = serializers.PostSerializer
 
@@ -35,15 +27,18 @@ class PostDetailView(RetrieveAPIView):
     lookup_field = 'slug'
 
 
-class ReviewListView(ListAPIView, CacheMixin):
-    queryset = models.Review.objects.all()
+class ReviewListView(ListAPIView):
     serializer_class = serializers.ReviewSerializer
 
+    def get_queryset(self):
+        return cache.get_or_set('review', models.Review.objects.all())
 
-class SocialAccountListView(ListAPIView, CacheMixin):
-    queryset = models.SocialAccount.objects.all()
+
+class SocialAccountListView(ListAPIView):
     serializer_class = serializers.SocialAccountSerializer
 
+    def get_queryset(self):
+        return cache.get_or_set('SocialAccount', models.SocialAccount.objects.all())
 
 class ContactView(CreateAPIView):
     queryset = models.Contact.objects.all()
@@ -51,9 +46,9 @@ class ContactView(CreateAPIView):
 
 
 class HomeView(APIView):
-    @method_decorator(cache_page(60 * 60 * 1))
     def get(self, request, *args, **kwargs):
-        return Response(serializers.HomeSerializer(models.Home.get_solo()).data)
+        data = cache.get_or_set('Home', models.Home.get_solo())
+        return Response(serializers.HomeSerializer(data).data)
 
 
 class SubscriptionView(CreateAPIView):
