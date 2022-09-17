@@ -1,2 +1,2 @@
-web: gunicorn django_tasklist.wsgi --log-file -
+web: gunicorn config.wsgi --log-file -
 release: python manage.py migrate
