@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
@@ -99,7 +100,7 @@ class Review(BaseModel):
 
 
 class SocialAccount(BaseModel):
-    icon = models.ImageField('icon', upload_to='icons/')
+    icon = models.FileField('icon', upload_to='icons/', validators=[FileExtensionValidator(['svg', 'png'])], help_text='only .svg and .png files can be uploaded')
     url = models.URLField('url')
 
     def __str__(self):
@@ -162,7 +163,7 @@ from django.db.models.signals import post_save, post_delete, pre_save, pre_delet
 @receiver(post_delete, sender=Home)
 def cache_home(sender, instance, **kwargs):
     cache.delete('Home')
-    cache.set('Home', Home.get_solo())
+    cache.set('Home', Home.get_solo(), 3000)
 
 
 @receiver(post_save, sender=SocialAccount)
@@ -172,5 +173,5 @@ def cache_home(sender, instance, **kwargs):
 def cache_everything(sender, instance, **kwargs):
     name = sender._meta.object_name
     cache.delete(name)
-    exec(f"cache.set('{name}', {name}.objects.all())")
+    exec(f"cache.set('{name}', {name}.objects.all(), 3000)")
     print(cache.get(name), '**')

@@ -31,14 +31,14 @@ class ReviewListView(ListAPIView):
     serializer_class = serializers.ReviewSerializer
 
     def get_queryset(self):
-        return cache.get_or_set('review', models.Review.objects.all())
+        return cache.get_or_set('review', models.Review.objects.all(), 3000)
 
 
 class SocialAccountListView(ListAPIView):
     serializer_class = serializers.SocialAccountSerializer
 
     def get_queryset(self):
-        return cache.get_or_set('SocialAccount', models.SocialAccount.objects.all())
+        return cache.get_or_set('SocialAccount', models.SocialAccount.objects.all(), 3000)
 
 class ContactView(CreateAPIView):
     queryset = models.Contact.objects.all()
@@ -47,7 +47,7 @@ class ContactView(CreateAPIView):
 
 class HomeView(APIView):
     def get(self, request, *args, **kwargs):
-        data = cache.get_or_set('Home', models.Home.get_solo())
+        data = cache.get_or_set('Home', models.Home.get_solo(), 3000)
         return Response(serializers.HomeSerializer(data).data)
 
 
