@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # third party apps
     'jazzmin',
     'ckeditor',
-    "debug_toolbar",
+    'cache_fallback',
     "rest_framework",
     "drf_yasg",
     "django_filters",
@@ -60,14 +60,14 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # third party
+    'django.middleware.cache.UpdateCacheMiddleware',  # NEW
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',  # NEW
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # third party
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -99,7 +99,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'blog',
+        'NAME': 'english',
 
         'USER': 'root',
 
@@ -114,6 +114,7 @@ DATABASES = {
 }
 
 import dj_database_url
+
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 
@@ -150,11 +151,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
-STATICFILES_DIRS = (
-    BASE_DIR / 'staticfiles',
-)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = (
+#     BASE_DIR / 'static',
+# )
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -419,4 +421,18 @@ CKEDITOR_CONFIGS = {
 }
 # ===============END CKEDITOR CONFIGURATION=======================#
 
-APPEND_SLASH=True
+APPEND_SLASH = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+    }
+
+}
+
+
+# import django_heroku
+#
+# django_heroku.settings(locals())
+
