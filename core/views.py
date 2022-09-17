@@ -2,7 +2,6 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models, serializers
-from django.core.cache import cache
 
 
 class LessonListView(ListAPIView):
@@ -28,17 +27,17 @@ class PostDetailView(RetrieveAPIView):
 
 
 class ReviewListView(ListAPIView):
+    queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
 
-    def get_queryset(self):
-        return cache.get_or_set('review', models.Review.objects.all(), 3000)
+
 
 
 class SocialAccountListView(ListAPIView):
+    queryset = models.SocialAccount.objects.all()
     serializer_class = serializers.SocialAccountSerializer
 
-    def get_queryset(self):
-        return cache.get_or_set('SocialAccount', models.SocialAccount.objects.all(), 3000)
+
 
 class ContactView(CreateAPIView):
     queryset = models.Contact.objects.all()
@@ -47,7 +46,7 @@ class ContactView(CreateAPIView):
 
 class HomeView(APIView):
     def get(self, request, *args, **kwargs):
-        data = cache.get_or_set('Home', models.Home.get_solo(), 3000)
+        data = models.Home.get_solo()
         return Response(serializers.HomeSerializer(data).data)
 
 

@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -159,19 +158,4 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
 
 
-@receiver(post_save, sender=Home)
-@receiver(post_delete, sender=Home)
-def cache_home(sender, instance, **kwargs):
-    cache.delete('Home')
-    cache.set('Home', Home.get_solo(), 3000)
 
-
-@receiver(post_save, sender=SocialAccount)
-@receiver(post_delete, sender=SocialAccount)
-@receiver(post_save, sender=Review)
-@receiver(post_delete, sender=Review)
-def cache_everything(sender, instance, **kwargs):
-    name = sender._meta.object_name
-    cache.delete(name)
-    exec(f"cache.set('{name}', {name}.objects.all(), 3000)")
-    print(cache.get(name), '**')

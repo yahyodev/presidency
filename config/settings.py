@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     # third party apps
     'jazzmin',
     'ckeditor',
-    'cache_fallback',
     "rest_framework",
     "drf_yasg",
     "django_filters",
@@ -62,9 +61,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # third party
-    'django.middleware.cache.UpdateCacheMiddleware',  # NEW
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',  # NEW
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -424,20 +420,6 @@ CKEDITOR_CONFIGS = {
 
 APPEND_SLASH = True
 
-CACHES = {
-
-    'default': {
-
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-
-        'LOCATION': 'unique-snowflake',
-
-    }
-
-}
-CACHE_MIDDLEWARE_ALIAS = 'default'  # The cache alias to use for storage and 'default' is **local-memory cache**.
-CACHE_MIDDLEWARE_SECONDS = 5  # number of seconds before each page is cached
-CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 import django_heroku
 
