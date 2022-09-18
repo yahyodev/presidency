@@ -1,12 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework import serializers
 from . import models
-
-
-class LessonSerializer(ModelSerializer):
-    class Meta:
-        model = models.Lesson
-        fields = '__all__'
+from config import settings
 
 
 class PostSerializer(ModelSerializer):
@@ -65,3 +60,20 @@ class TypeSerializer(ModelSerializer):
                 children.append(i)
 
         return TypeChildSerializer(children, many=True).data
+
+
+class FileSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return {
+            'url': settings.HOST + instance.file.url,
+            'size': instance.file_size,
+        }
+
+
+class LessonSerializer(ModelSerializer):
+    type = TypeChildSerializer()
+    files = FileSerializer(many=True)
+
+    class Meta:
+        model = models.Lesson
+        fields = ('title', 'slug', 'content', 'level', 'category', 'type', 'files')
