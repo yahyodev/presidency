@@ -29,7 +29,7 @@ class LessonAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('title',)
     }
-    list_filter = ('category', 'level')
+    list_filter = ('type', 'level')
 
 
 @admin.register(models.Post)
