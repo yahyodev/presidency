@@ -78,6 +78,7 @@ class Lesson(BaseModel):
         return self.title
 
     class Meta:
+        ordering = ['order', 'title']
         db_table = 'lesson'
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
