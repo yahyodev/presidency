@@ -52,6 +52,12 @@ class Type(BaseModel):
     slug = models.SlugField('slug', max_length=256, unique=True)
     order = models.PositiveSmallIntegerField('order')
 
+    class Meta:
+        db_table = 'type'
+        verbose_name = 'Type'
+        verbose_name_plural = 'Types'
+        ordering = ['order', 'title']
+
     def __str__(self):
         return self.title
 
@@ -78,7 +84,6 @@ class Lesson(BaseModel):
         return self.title
 
     class Meta:
-        ordering = ['order', 'title']
         db_table = 'lesson'
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
