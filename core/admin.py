@@ -2,6 +2,7 @@ from django.contrib import admin
 from . import models
 from django.db.models import Q
 
+
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'slug')
@@ -40,7 +41,9 @@ class TypeFilter(SimpleListFilter):
         return [(c.id, c.title) for c in types]
 
     def queryset(self, request, queryset):
-        return queryset.filter(Q(type_id=self.value()) | Q(type__parent_id=self.value()))
+        if self.value():
+            return queryset.filter(Q(type_id=self.value()) | Q(type__parent_id=self.value()))
+        return queryset
 
 
 @admin.register(models.Lesson)
@@ -50,6 +53,11 @@ class LessonAdmin(admin.ModelAdmin):
         'slug': ('title',)
     }
     list_filter = (TypeFilter,)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "type":
+            kwargs["queryset"] = models.Type.objects.exclude(parent=None)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(models.Post)
