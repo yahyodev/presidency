@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -31,12 +32,9 @@ class ReviewListView(ListAPIView):
     serializer_class = serializers.ReviewSerializer
 
 
-
-
 class SocialAccountListView(ListAPIView):
     queryset = models.SocialAccount.objects.all()
     serializer_class = serializers.SocialAccountSerializer
-
 
 
 class ContactView(CreateAPIView):
@@ -53,3 +51,15 @@ class HomeView(APIView):
 class SubscriptionView(CreateAPIView):
     queryset = models.Subscription.objects.all()
     serializer_class = serializers.SubscriptionSerializer
+
+
+class TypeListView(ListAPIView):
+    serializer_class = serializers.TypeSerializer
+
+    def get_queryset(self):
+        parents = []
+        for i in models.Type.objects.all():
+            if i.parent is None:
+                parents.append(i)
+
+        return parents

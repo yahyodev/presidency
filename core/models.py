@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -15,6 +16,7 @@ class BaseModel(models.Model):
 
 
 class LevelChoices(models.TextChoices):
+    all = 'All', 'All'
     beginner = 'Beginner', 'Beginner'
     elementary = 'Elementary', 'Elementary'
     pre_intermediate = 'Pre-Intermediate', 'Pre-Intermediate'
@@ -44,12 +46,29 @@ class Category(BaseModel):
         verbose_name_plural = 'Categories'
 
 
+class Type(BaseModel):
+    parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
+    title = models.CharField('title', max_length=256)
+    slug = models.SlugField('slug', max_length=256, unique=True)
+    order = models.PositiveSmallIntegerField('order')
+
+    def __str__(self):
+        return self.title
+
+    def clean(self):
+        self.slug = unique_slug_generator(self.__class__, self)
+
+        if self.parent and self.parent.parent:
+            raise ValidationError('You can not create more than 1 parent')
+
+
 class Lesson(BaseModel):
     title = models.CharField('title', max_length=256)
     slug = models.SlugField('slug', max_length=256, unique=True)
     content = RichTextUploadingField('content')
-    level = models.CharField('level', max_length=64, choices=LevelChoices.choices)
+    level = models.CharField('level', max_length=64, choices=LevelChoices.choices, default='All')
     category = models.ManyToManyField(Category, verbose_name='category', null=True, blank=True)
+    type = models.ForeignKey('Type', verbose_name='type', on_delete=models.PROTECT)
     files = models.ManyToManyField('File', null=True, blank=True, verbose_name='files')
 
     def clean(self):
@@ -99,7 +118,8 @@ class Review(BaseModel):
 
 
 class SocialAccount(BaseModel):
-    icon = models.FileField('icon', upload_to='icons/', validators=[FileExtensionValidator(['svg', 'png'])], help_text='only .svg and .png files can be uploaded')
+    icon = models.FileField('icon', upload_to='icons/', validators=[FileExtensionValidator(['svg', 'png'])],
+                            help_text='only .svg and .png files can be uploaded')
     url = models.URLField('url')
 
     def __str__(self):
@@ -156,6 +176,3 @@ class Subscription(BaseModel):
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
-
-
-

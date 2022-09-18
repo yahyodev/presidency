@@ -96,7 +96,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'english',
+        'NAME': 'eng',
 
         'USER': 'root',
 

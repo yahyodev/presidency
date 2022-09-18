@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework import serializers
 from . import models
 
@@ -38,7 +38,30 @@ class HomeSerializer(ModelSerializer):
         model = models.Home
         fields = '__all__'
 
+
 class SubscriptionSerializer(ModelSerializer):
     class Meta:
         model = models.Subscription
         fields = '__all__'
+
+
+class TypeChildSerializer(ModelSerializer):
+    class Meta:
+        model = models.Type
+        fields = ('title', 'slug', 'order',)
+
+
+class TypeSerializer(ModelSerializer):
+    children = SerializerMethodField()
+
+    class Meta:
+        model = models.Type
+        fields = ('title', 'slug', 'order', 'children')
+
+    def get_children(self, obj):
+        children = []
+        for i in models.Type.objects.all():
+            if i.parent and i.parent.id == obj.id:
+                children.append(i)
+
+        return TypeChildSerializer(children, many=True).data

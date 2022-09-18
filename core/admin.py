@@ -9,9 +9,18 @@ class CategoryAdmin(admin.ModelAdmin):
         'slug': ('title',)
     }
 
+
 @admin.register(models.File)
 class FileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'file')
+
+
+@admin.register(models.Type)
+class TypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title')
+    prepopulated_fields = {
+        'slug': ('title',)
+    }
 
 
 @admin.register(models.Lesson)
@@ -20,6 +29,7 @@ class LessonAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('title',)
     }
+    list_filter = ('category', 'level')
 
 
 @admin.register(models.Post)
