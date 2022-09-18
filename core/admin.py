@@ -54,7 +54,15 @@ class LessonAdmin(admin.ModelAdmin):
     }
     list_filter = (TypeFilter,)
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['type'].widget.can_add_related = False
+        form.base_fields['type'].widget.can_delete_related = False
+        form.base_fields['type'].widget.can_change_related = False
+
+        return form
+
+    def formfield_for_foreignkey(self, db_field, request, obj=None, **kwargs):
         if db_field.name == "type":
             kwargs["queryset"] = models.Type.objects.exclude(parent=None)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
