@@ -1,6 +1,6 @@
 from django.contrib import admin
 from . import models
-
+from django.db.models import Q
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -23,13 +23,33 @@ class TypeAdmin(admin.ModelAdmin):
     }
 
 
+from django.contrib.admin import SimpleListFilter
+
+
+class TypeFilter(SimpleListFilter):
+    title = 'type'  # or use _('country') for translated title
+    parameter_name = 'type'
+
+    def lookups(self, request, model_admin):
+        types = set()
+        for c in model_admin.model.objects.all():
+            if c.type.parent == None:
+                types.add(c.type)
+            else:
+                types.add(c.type.parent)
+        return [(c.id, c.title) for c in types]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(Q(type_id=self.value()) | Q(type__parent_id=self.value()))
+
+
 @admin.register(models.Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'slug', 'level')
+    list_display = ('id', 'title', 'slug', 'level', 'type')
     prepopulated_fields = {
         'slug': ('title',)
     }
-    list_filter = ('type', 'level')
+    list_filter = (TypeFilter,)
 
 
 @admin.register(models.Post)
