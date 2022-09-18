@@ -79,6 +79,9 @@ class Lesson(BaseModel):
 
     def clean(self):
         self.slug = unique_slug_generator(self.__class__, self)
+        print(self.type)
+        # if self.type and self.type.parent == None:
+        #     raise ValidationError('Please, enter a type with a parent')
 
     def __str__(self):
         return self.title
