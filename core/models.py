@@ -70,6 +70,8 @@ class Type(BaseModel):
 
 class Lesson(BaseModel):
     title = models.CharField('title', max_length=256)
+    thumbnail = models.ImageField('image', upload_to='images/')
+    description = models.CharField('description', max_length=512)
     slug = models.SlugField('slug', max_length=256, unique=True)
     content = RichTextUploadingField('content')
     level = models.CharField('level', max_length=64, choices=LevelChoices.choices, default='All')
@@ -79,9 +81,6 @@ class Lesson(BaseModel):
 
     def clean(self):
         self.slug = unique_slug_generator(self.__class__, self)
-        print(self.type)
-        # if self.type and self.type.parent == None:
-        #     raise ValidationError('Please, enter a type with a parent')
 
     def __str__(self):
         return self.title
