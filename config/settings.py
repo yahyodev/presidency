@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    "whitenoise.runserver_nostatic", #third party
+    "whitenoise.runserver_nostatic",  # third party
     'django.contrib.staticfiles',
     # custom apps
     'core',
@@ -406,7 +406,6 @@ CKEDITOR_CONFIGS = {
 # ===============END CKEDITOR CONFIGURATION=======================#
 
 APPEND_SLASH = True
-
 
 import django_heroku
 

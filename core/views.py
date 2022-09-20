@@ -1,4 +1,7 @@
+import django_filters
 from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,6 +11,9 @@ from . import models, serializers
 class LessonListView(ListAPIView):
     queryset = models.Lesson.objects.all()
     serializer_class = serializers.LessonSerializer
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    search_fields = ['title', 'content', 'description']
+    filterset_fields = ['level', 'type', 'category']
 
 
 class LessonDetailView(RetrieveAPIView):

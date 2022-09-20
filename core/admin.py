@@ -1,29 +1,6 @@
 from django.contrib import admin
 from . import models
 from django.db.models import Q
-
-
-@admin.register(models.Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'slug')
-    prepopulated_fields = {
-        'slug': ('title',)
-    }
-
-
-@admin.register(models.File)
-class FileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'file')
-
-
-@admin.register(models.Type)
-class TypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    prepopulated_fields = {
-        'slug': ('title',)
-    }
-
-
 from django.contrib.admin import SimpleListFilter
 
 
@@ -44,6 +21,32 @@ class TypeFilter(SimpleListFilter):
         if self.value():
             return queryset.filter(Q(type_id=self.value()) | Q(type__parent_id=self.value()))
         return queryset
+
+
+@admin.register(models.Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'slug')
+    prepopulated_fields = {
+        'slug': ('title',)
+    }
+
+
+@admin.register(models.File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'file')
+
+
+@admin.register(models.Type)
+class TypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title',)
+    prepopulated_fields = {
+        'slug': ('title',)
+    }
+
+    def formfield_for_foreignkey(self, db_field, request, obj=None, **kwargs):
+        if db_field.name == "parent":
+            kwargs["queryset"] = models.Type.objects.filter(parent=None)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(models.Lesson)
