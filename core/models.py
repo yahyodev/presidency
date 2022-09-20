@@ -65,7 +65,7 @@ class Type(BaseModel):
         self.slug = unique_slug_generator(self.__class__, self)
 
         if self.parent and self.parent.parent:
-            raise ValidationError('You can not create more than 1 parent')
+            raise ValidationError('You can not create sub-sub-type')
 
 
 class Lesson(BaseModel):

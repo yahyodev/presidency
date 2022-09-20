@@ -13,7 +13,7 @@ class LessonListView(ListAPIView):
     serializer_class = serializers.LessonSerializer
     filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = ['title', 'content', 'description']
-    filterset_fields = ['level', 'type', 'category']
+    filterset_fields = ['type__slug']
 
 
 class LessonDetailView(RetrieveAPIView):
