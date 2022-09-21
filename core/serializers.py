@@ -66,7 +66,7 @@ class FileSerializer(serializers.Serializer):
     def to_representation(self, instance):
         return {
             'url': settings.HOST + instance.file.url,
-            'size': instance.file_size,
+            'name': instance.name
         }
 
 

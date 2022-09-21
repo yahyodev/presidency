@@ -406,6 +406,8 @@ CKEDITOR_CONFIGS = {
 
 APPEND_SLASH = True
 
+HOST = '127.0.0.1:8000'
+
 import django_heroku
 
 django_heroku.settings(locals())
