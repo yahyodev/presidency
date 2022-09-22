@@ -67,6 +67,10 @@ class Type(BaseModel):
         if self.parent and self.parent.parent:
             raise ValidationError('You can not create sub-sub-type')
 
+        if self.parent is None and Type.objects.filter(parent=None).count() >= 6:
+            raise ValidationError("You can not add more types without a parent")
+
+
 
 class Lesson(BaseModel):
     title = models.CharField('title', max_length=256)

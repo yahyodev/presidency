@@ -43,11 +43,6 @@ class TypeAdmin(admin.ModelAdmin):
         'slug': ('title',)
     }
 
-    def has_add_permission(self, request):
-        if self.model.objects.count() >= 6:
-            return False
-        return super().has_add_permission(request)
-
     def formfield_for_foreignkey(self, db_field, request, obj=None, **kwargs):
         if db_field.name == "parent":
             kwargs["queryset"] = models.Type.objects.filter(parent=None)
