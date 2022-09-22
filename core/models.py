@@ -71,7 +71,6 @@ class Type(BaseModel):
             raise ValidationError("You can not add more types without a parent")
 
 
-
 class Lesson(BaseModel):
     title = models.CharField('title', max_length=256)
     thumbnail = models.ImageField('image', upload_to='images/')
@@ -97,10 +96,11 @@ class Lesson(BaseModel):
 
 class Post(BaseModel):
     title = models.CharField('title', max_length=256)
+    thumbnail = models.ImageField('image', upload_to='images/')
+    description = models.CharField('description', max_length=512)
     slug = models.SlugField('slug', max_length=256, unique=True)
     content = RichTextUploadingField('content')
     category = models.ManyToManyField(Category, verbose_name='category', null=True, blank=True)
-    views = models.PositiveIntegerField('views')
 
     def clean(self):
         self.slug = unique_slug_generator(self.__class__, self)
