@@ -5,6 +5,10 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
 from .utils import unique_slug_generator
 from .validators import validate_rating
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
+from django.core.mail import send_mail, get_connection
+from django.conf import settings
 
 
 class BaseModel(models.Model):
@@ -186,5 +190,17 @@ class Subscription(BaseModel):
         verbose_name_plural = 'Subscriptions'
 
 
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
+class MailToSubscribers(BaseModel):
+    title = models.CharField('title', max_length=256)
+    content = RichTextUploadingField('content')
+
+
+@receiver(post_save, sender=MailToSubscribers)
+def send_msg(sender, instance, created, **kwargs):
+    if created:
+        subject = instance.title
+        message = instance.content
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = list(Subscription.objects.values_list('email', flat=True))
+        send_mail(subject=subject, html_message=message, message=None, from_email=email_from,
+                  recipient_list=recipient_list, )

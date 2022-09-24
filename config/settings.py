@@ -23,10 +23,11 @@ import os
 # READING ENV
 env = environ.Env()
 env.read_env('.env')
+SECRET_KEY = env.str('SECRET_KEY')
+
 # END READING ENV
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -140,7 +141,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 #     BASE_DIR / 'static',
 # )
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -408,6 +409,12 @@ APPEND_SLASH = True
 
 HOST = '127.0.0.1:8000'
 
-import django_heroku
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
-django_heroku.settings(locals())
+try:
+    from .local_settings import *
+except Exception:
+    pass

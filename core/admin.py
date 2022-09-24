@@ -108,3 +108,18 @@ class HomeAdmin(admin.ModelAdmin):
 @admin.register(models.Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ('id', 'email',)
+
+
+@admin.register(models.MailToSubscribers)
+class MailToSubscribersAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'content')
+
+    def change_view(self, request, object_id, extra_context=None):
+        ''' customize add/edit form '''
+        extra_context = extra_context or {}
+        extra_context['show_save_and_continue'] = False
+        extra_context['show_save'] = False
+        extra_context['show_save_and_add_another'] = False
+        extra_context['show_delete'] = False
+
+        return super().change_view(request, object_id, extra_context=extra_context)
