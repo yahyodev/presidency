@@ -76,6 +76,8 @@ class LessonSerializer(ModelSerializer):
 
     class Meta:
         model = models.Lesson
-        fields = (
-            'title', 'slug', 'content', 'level', 'category', 'type', 'files', 'thumbnail', 'description', 'created_at',
-            'updated_at')
+        fields = ('id',
+                  'title', 'slug', 'content', 'level', 'category', 'type', 'files', 'thumbnail', 'description',
+                  'created_at',
+                  'updated_at')
+

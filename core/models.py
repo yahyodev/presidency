@@ -7,7 +7,7 @@ from .utils import unique_slug_generator
 from .validators import validate_rating
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
-from django.core.mail import send_mail, get_connection
+from django.core.mail import send_mail, get_connection, send_mass_mail
 from django.conf import settings
 
 
@@ -164,6 +164,7 @@ class Contact(BaseModel):
 class Home(BaseModel):
     full_name = models.CharField('full_name', max_length=256)
     bio = RichTextField('bio')
+    email = models.EmailField('email')
 
     def __str__(self):
         return self.full_name
@@ -202,5 +203,6 @@ def send_msg(sender, instance, created, **kwargs):
         message = instance.content
         email_from = settings.EMAIL_HOST_USER
         recipient_list = list(Subscription.objects.values_list('email', flat=True))
-        send_mail(subject=subject, html_message=message, message=None, from_email=email_from,
-                  recipient_list=recipient_list, )
+        for i in recipient_list:
+            send_mail(subject=subject, html_message=message, message=None, from_email=email_from,
+                      recipient_list=[i, ])
