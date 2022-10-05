@@ -72,6 +72,7 @@ class Type(BaseModel):
             raise ValidationError('You can not create sub-sub-type')
 
         if self.parent is None and Type.objects.filter(parent=None).count() >= 6:
+            print(Type.objects.filter(parent=None).count())
             raise ValidationError("You can not add more types without a parent")
 
 
@@ -194,6 +195,13 @@ class Subscription(BaseModel):
 class MailToSubscribers(BaseModel):
     title = models.CharField('title', max_length=256)
     content = RichTextUploadingField('content')
+
+    class Meta:
+        verbose_name = 'Mail To Subscribers'
+        verbose_name_plural = 'Mail To Subscribers'
+
+    def __str__(self):
+        return self.title
 
 
 @receiver(post_save, sender=MailToSubscribers)

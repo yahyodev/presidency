@@ -22,7 +22,7 @@ from .drf_yasg import schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
+    path('api/v1/', include('core.urls')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0),
             name='schema-json'),

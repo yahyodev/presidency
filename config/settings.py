@@ -98,10 +98,7 @@ DATABASES = {
     }
 }
 
-import dj_database_url
 
-db_from_env = dj_database_url.config()
-DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -407,7 +404,6 @@ CKEDITOR_CONFIGS = {
 
 APPEND_SLASH = True
 
-HOST = '127.0.0.1:8000'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
